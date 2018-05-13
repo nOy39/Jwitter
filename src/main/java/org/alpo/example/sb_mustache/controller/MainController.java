@@ -1,8 +1,10 @@
 package org.alpo.example.sb_mustache.controller;
 
 import org.alpo.example.sb_mustache.domain.Message;
+import org.alpo.example.sb_mustache.domain.Post;
 import org.alpo.example.sb_mustache.domain.User;
 import org.alpo.example.sb_mustache.repos.MessageRepo;
+import org.alpo.example.sb_mustache.repos.PostRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +28,10 @@ import java.util.UUID;
  */
 @Controller
 public class MainController {
+
+    @Autowired
+    private PostRepo postRepo;
+
     @Autowired
     private MessageRepo messageRepo;
 
@@ -37,8 +43,13 @@ public class MainController {
 
 
     @GetMapping("/")
-    public String welcome(Map<String, Object> model) {
-        model.put("title", TITLE);
+    public String welcome(Model model) {
+        model.addAttribute("title", TITLE);
+
+        Iterable<Post> posts = postRepo.findAll();
+
+        model.addAttribute("posts", posts);
+
         return "welcome";
     }
 
